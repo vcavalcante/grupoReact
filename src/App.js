@@ -12,7 +12,7 @@ class App extends Component {
         {id:4,isComplete:false,text:'dar o cachorro'},
       ]
     };
-    
+
   }
 
   notificarMudar(todoAlterado){
@@ -33,9 +33,9 @@ class App extends Component {
       </form>
     </fieldset>
     <ul>
-      {this.state.listTodo.map(function(todo){
-        return <Linhazinha key={todo.id} todo={todo} mudou={ ()=>{this.notificarMudar(todo)}} />
-      }.bind(this))}
+      {this.state.listTodo.map((todo)=>{
+        return <Linhazinha key={todo.id} todo={todo} mudou={ this.notificarMudar.bind(this,todo)} />
+      })}
     </ul>
     </div>
   }
