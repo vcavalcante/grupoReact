@@ -12,12 +12,14 @@ class App extends Component {
         {id:4,isComplete:false,text:'dar o cachorro'},
       ]
     };
-
-    this.notificarMudar = this.notificarMudar.bind(this); 
+    
   }
 
-  notificarMudar(){
-
+  notificarMudar(todoAlterado){
+    const indexTodoVelho = this.state.listTodo.findIndex((todo)=>{return todo.id === todoAlterado.id});
+    const novaListTodo =  this.state.listTodo;
+    novaListTodo[indexTodoVelho] = todoAlterado;
+    this.setState({listTodo : novaListTodo});
   }
 
   render(){
@@ -32,7 +34,7 @@ class App extends Component {
     </fieldset>
     <ul>
       {this.state.listTodo.map(function(todo){
-        return <Linhazinha key={todo.id} todo={todo} mudou={() => this.notificarMudar()} />
+        return <Linhazinha key={todo.id} todo={todo} mudou={ ()=>{this.notificarMudar(todo)}} />
       }.bind(this))}
     </ul>
     </div>
