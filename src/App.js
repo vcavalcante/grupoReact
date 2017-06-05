@@ -16,10 +16,13 @@ class App extends Component {
   }
 
   notificarMudar(todoAlterado){
-    const indexTodoVelho = this.state.listTodo.findIndex((todo)=>{return todo.id === todoAlterado.id});
-    const novaListTodo =  this.state.listTodo;
-    novaListTodo[indexTodoVelho] = todoAlterado;
-    this.setState({listTodo : novaListTodo});
+    const todoListUpdated = this.state.listTodo.map((todo) => {
+      if (todo.id == todoAlterado.id)
+        todo.isComplete = todoAlterado.isComplete;
+      return todo;
+    });
+
+    this.setState({listTodo : todoListUpdated});
   }
 
   render(){
@@ -34,7 +37,7 @@ class App extends Component {
     </fieldset>
     <ul>
       {this.state.listTodo.map((todo)=>{
-        return <Linhazinha key={todo.id} todo={todo} mudou={ this.notificarMudar.bind(this,todo)} />
+        return <Linhazinha key={todo.id} todo={todo} mudou={this.notificarMudar.bind(this)} />
       })}
     </ul>
     </div>
@@ -43,11 +46,12 @@ class App extends Component {
 
 export default App;
 
+
 class Linhazinha extends Component {
   checkboxHandler(event) {
     // TODO: fazer direito. Usar uma classe para TODO e um método para alterar valor'
     this.props.todo.isComplete = !this.props.todo.isComplete; 
-    this.props.mudou();
+    this.props.mudou(this.props.todo);
   }
 
   render() {
