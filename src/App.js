@@ -5,24 +5,24 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      listTodo:[
+      todoList:[
         {id:1,isComplete:true,text:'lavar o cachorro'},
         {id:2,isComplete:false,text:'passear com o cachorro'},
         {id:3,isComplete:true,text:'limpar merda do cachorro'},
         {id:4,isComplete:false,text:'dar o cachorro'},
       ]
     };
-
+    this.onToggle = this.onToggle.bind(this)
   }
 
-  notificarMudar(todoAlterado){
-    const todoListUpdated = this.state.listTodo.map((todo) => {
-      if (todo.id == todoAlterado.id)
-        todo.isComplete = todoAlterado.isComplete;
+  onToggle(id) {
+    const todoListUpdated = this.state.todoList.map(todo => {
+      if (todo.id == id)
+        todo.isComplete = !todo.isComplete;
       return todo;
     });
 
-    this.setState({listTodo : todoListUpdated});
+    this.setState({todoList : todoListUpdated});
   }
 
   render(){
@@ -36,8 +36,8 @@ class App extends Component {
       </form>
     </fieldset>
     <ul>
-      {this.state.listTodo.map((todo)=>{
-        return <Linhazinha key={todo.id} todo={todo} mudou={this.notificarMudar.bind(this)} />
+      {this.state.todoList.map(todo => {
+        return <Todo key={todo.id} {...todo} toggle={this.onToggle} />
       })}
     </ul>
     </div>
@@ -46,16 +46,10 @@ class App extends Component {
 
 export default App;
 
-
-class Linhazinha extends Component {
-  checkboxHandler(event) {
-    // TODO: fazer direito. Usar uma classe para TODO e um método para alterar valor'
-    this.props.todo.isComplete = !this.props.todo.isComplete; 
-    this.props.mudou(this.props.todo);
-  }
-
-  render() {
-    // onchange={this.checkboxHandler.bind(this,todo)}
-    return <li><input type="checkbox" checked={this.props.todo.isComplete} onChange={this.checkboxHandler.bind(this)} /> {this.props.todo.text}</li> 
-  }
+const Todo = props => {
+  return <li>
+    <input type="checkbox"
+      checked={props.isComplete}
+      onChange={props.toggle.bind(this, props.id)} /> {props.text}
+  </li>
 }  
