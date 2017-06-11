@@ -14,7 +14,7 @@ class App extends Component {
     };
   }
 
-  onToggle(id) {
+  onToggle = (id) => {
     const todoListUpdated = this.state.todoList.map(todo => {
       if (todo.id == id)
         todo.isComplete = !todo.isComplete;
@@ -36,7 +36,7 @@ class App extends Component {
     </fieldset>
     <ul>
       {this.state.todoList.map(todo => {
-        return <Todo key={todo.id} {...todo} toggle={this.onToggle.bind(this, todo.id)} />
+        return <Todo key={todo.id} {...todo} toggle={this.onToggle} />
       })}
     </ul>
     </div>
@@ -46,11 +46,14 @@ class App extends Component {
 export default App;
 
 const Todo = props => {
+  const onChange = (ev) =>{
+    props.toggle(props.id)
+  }
   return (
     <li>
       <input type="checkbox"
         checked={props.isComplete}
-        onChange={props.toggle} /> {props.text}
+        onChange={onChange} /> {props.text}
     </li>
   )
 }  
