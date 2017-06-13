@@ -10,13 +10,14 @@ class App extends Component {
         {id:2,isComplete:false,text:'passear com o cachorro'},
         {id:3,isComplete:true,text:'limpar merda do cachorro'},
         {id:4,isComplete:false,text:'dar o cachorro'},
-      ]
+      ],
+      todoText:''
     };
   }
 
   onToggle = (id) => {
     const todoListUpdated = this.state.todoList.map(todo => {
-      if (todo.id == id)
+      if (todo.id === id)
         todo.isComplete = !todo.isComplete;
       return todo;
     });
@@ -24,36 +25,76 @@ class App extends Component {
     this.setState({todoList : todoListUpdated});
   }
 
+  onChangeTodo = (text) => {
+    this.setState({
+      todoList:this.state.todoList,
+      todoText:text
+    })
+  }
+
+  addTodo = () => {
+    const todoList =  [...this.state.todoList,
+        {
+          id: this.state.todoList.length+1,
+          text: this.state.todoText,
+          isComplete: false
+        }]
+    this.setState({todoList,todoText:''});
+      
+    }
+  
+
   render(){
     return <div>
-    <header><h1>ToDo App</h1></header>
-    <fieldset>
-      <legend>Insira uma tarefa</legend>
-      <form>
-        <input type="text" />
-        <input type="submit" />
-      </form>
-    </fieldset>
-    <ul>
-      {this.state.todoList.map(todo => {
-        return <Todo key={todo.id} {...todo} toggle={this.onToggle} />
-      })}
-    </ul>
+      <header><h1>ToDo App</h1></header>
+      <AddTodo onChangeTodo = {this.onChangeTodo} onAddTodo={this.addTodo} text = {this.state.todoText}/>
+      <TodoList todoList = {this.state.todoList} toggle = {this.onToggle} />
     </div>
   }
 }
 
 export default App;
+const AddTodo = props =>{
+  const onSubmitForm = (ev) =>{
+    ev.preventDefault();
+    props.onAddTodo();
+  }
+  const onChangeTodo= (ev) => {
+    props.onChangeTodo(ev.target.value);
+
+  }
+  return (
+    <fieldset>
+      <legend>Insira uma tarefa</legend>
+      <form onSubmit={onSubmitForm}>
+        <input type="text" onChange={onChangeTodo} value={props.text} />
+        <input type="submit" />
+      </form>
+    </fieldset>
+  );
+}
+
+const TodoList = props =>{
+  return(
+    <ul>
+      {props.todoList.map(todo => {
+        return <Todo key={todo.id} {...todo} toggle={props.toggle} />
+      })}
+    </ul>
+  );
+}
 
 const Todo = props => {
-  const onChange = (ev) =>{
+  const onChange = () =>{
     props.toggle(props.id)
   }
   return (
     <li>
-      <input type="checkbox"
-        checked={props.isComplete}
-        onChange={onChange} /> {props.text}
+      <label>
+        <input type="checkbox"
+          checked={props.isComplete}
+          onChange={onChange} /> {props.text}
+      </label>
     </li>
   )
 }  
