@@ -44,12 +44,21 @@ class App extends Component {
       }
     })
   }
+  onRemove= (id)=>{
+    this.setState((prevState,props)=>{
+      return {
+        todoList: prevState.todoList.filter((item)=>{
+          return item.id !== id;
+        })
+      }
+    })
+  }
 
   render(){
     return <div>
     <header><h1>ToDo App</h1></header>
     <AddTodo text={this.state.text} onInputChange={this.onInputChange} onSubmit={this.onAddTodo} />
-    <TodoList todoList = {this.state.todoList} toggle ={this.onToggle } />
+    <TodoList todoList = {this.state.todoList} toggle ={this.onToggle } onRemove ={this.onRemove} />
     </div>
   }
 }
@@ -60,7 +69,7 @@ const TodoList = props =>{
   return(
      <ul>
       {props.todoList.map(todo => {
-        return <Todo key={todo.id} {...todo} toggle={props.toggle} />
+        return <Todo key={todo.id} {...todo} toggle={props.toggle} onRemove={props.onRemove} />
       })}
     </ul>
   )
@@ -87,6 +96,9 @@ const Todo = props => {
   const onChange = (ev) =>{
     props.toggle(props.id)
   }
+  const onRemove  = () =>{
+    props.onRemove(props.id)
+  }
   return (
     <li>
       <label>
@@ -94,6 +106,7 @@ const Todo = props => {
         checked={props.isComplete}
         onChange={onChange} /> {props.text}
         </label>
+        <button onClick={onRemove}>x</button>
     </li>
   )
 }  
